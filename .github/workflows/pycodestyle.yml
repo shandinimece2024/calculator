@@ -46,8 +46,8 @@ jobs:
 
       - name: Check File Length
         run: |
-          python scripts/check_length.py
+          python /check_length.py
 
       - name: Check Docstrings
         run: |
-          python scripts/check_docstrings.py
+          python /check_docstrings.py
