@@ -1,0 +1,54 @@
+name: Verilator Lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator
+
+      - name: Create Sample SV Files
+        run: |
+          mkdir -p rtl
+
+          cat > rtl/adder.sv << 'EOF'
+          module adder(
+              input logic [3:0] a,
+              input logic [3:0] b,
+              output logic [4:0] sum
+          );
+          assign sum = a + b;
+          endmodule
+          EOF
+
+          cat > rtl/bad.sv << 'EOF'
+          module bad(
+              input logic a,
+              output logic y
+          );
+          assign y = a
+          endmodule
+          EOF
+
+      - name: Run Custom Verilator Action
+        id: lint
+        uses: shandinimece2024/veri-lint@9903ec795b5b6ca0e051a149099e2f380aec747a
+        with:
+          sv_files: "rtl/adder.sv rtl/bad.sv"
+          severity: warning
+
+      - name: Show JSON Results
+        run: |
+          echo '${{ steps.lint.outputs.result }}'
