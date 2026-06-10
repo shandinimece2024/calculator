@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Custom Verilator Action
         id: lint
-        uses: shandinimece2024/veri-lint@v1
+        uses: shandinimece2024/veri-lint@9903ec795b5b6ca0e051a149099e2f380aec747a
         with:
           sv_files: "rtl/adder.sv rtl/bad.sv"
           severity: warning
